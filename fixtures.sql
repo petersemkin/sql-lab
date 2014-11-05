@@ -178,3 +178,17 @@ INSERT INTO `coffee` VALUES
 	(14, 'Aroti Super Crema', 'Russia', '40/60', 420),
 	(15, 'Paulig President', 'Finland', '100/0', 750),
 	(16, 'Paulig Espresso Barista', 'Finland', '80/20', 1110);
+	
+
+DROP TABLE IF EXISTS `actors`;
+
+CREATE TABLE `actors` (
+    `id` INTEGER PRIMARY KEY,
+    `name` VARCHAR(255),
+    `photo` BLOB,
+) ENGINE=innodb;
+
+INSERT INTO `actors` VALUES
+	(1, 'Edward Norton', LOAD_FILE('P:/photos/Edward Norton.jpg')),
+	(2, 'Jim Carry', LOAD_FILE('P:/photos/Jim Carry.png')),
+	(3, 'Jim Parsons', LOAD_FILE('P:/photos/Jum Parsons.jpg'));
