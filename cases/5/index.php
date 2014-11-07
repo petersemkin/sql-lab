@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Задание №4 / Лабораторная работа №1. SQL-инъекции</title>
+		<title>Задание №5 / Лабораторная работа №1. SQL-инъекции</title>
 		<meta name="description" content="SQL Injection Lab">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -44,8 +44,8 @@
 								<li><a href="../1/">Задание №1</a></li>
 								<li><a href="../2/">Задание №2</a></li>
 								<li><a href="../3/">Задание №3</a></li>
-								<li class="active"><a href=".">Задание №4</a></li>
-								<li><a href="../5/">Задание №5</a></li>
+								<li><a href="../4/">Задание №4</a></li>
+								<li class="active"><a href=".">Задание №5</a></li>
 							</ul>
 						</li>
 						<li><a href="https://github.com/toogle/sql-lab" target="_blank">Исходный код</a></li>
@@ -54,12 +54,10 @@
 
 				<div class="col-md-9">
 					<div class="well well-lg">
-						<h4>Прайс-лист на кофе</h4>
+						<h4>Марки кофе</h4>
 						<table class="table">
 							<tr>
 								<th>Марка</td>							
-								<th>Соотношение арабика/робуста, %</td>
-								<th>Цена, руб./кг.</td>
 							</tr>
 							<?php
 							date_default_timezone_set('Europe/Moscow');
@@ -71,7 +69,7 @@
 
 							$manufacturer = isset($_GET['manufacturer']) ? $_GET['manufacturer'] : $null;
 							
-							$sql  = "SELECT name, ratio, price";
+							$sql  = "SELECT name";
 							$sql .= "  FROM coffee";
 							$sql .= "  WHERE manufacturer = '${manufacturer}'";
 
@@ -85,8 +83,6 @@
 									while ($row = mysql_fetch_array($res)) {
 										$html  = "<tr>";
 										$html .= "  <td>${row['name']}</td>";
-										$html .= "  <td>${row['ratio']}</td>";
-										$html .= "  <td>${row['price']}</td>";
 										$html .= "</tr>";
 	
 										echo $html;
