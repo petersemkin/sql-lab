@@ -1,3 +1,4 @@
+<?php require_once('config.php'); ?>
 <!DOCTYPE html>
 <html lang="ru">
 	<head>
@@ -7,7 +8,7 @@
 		<meta name="description" content="SQL Injection Lab">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="<?php echo MEDIA_URL; ?>/css/bootstrap.min.css" rel="stylesheet">
 
 		<style>
 			h4 {
@@ -34,7 +35,7 @@
 		</style>
 
 		<!--[if lt IE 9]>
-			<script src="js/lib/respond.min.js"></script>
+			<script src="<?php echo MEDIA_URL; ?>/js/lib/respond.min.js"></script>
 		<![endif]-->
 	</head>
 	<body>
@@ -56,6 +57,7 @@
 							<ul class="nav nav-pills nav-stacked nav-inner">
 								<li><a href="#invalid-input">Некорректная обработка входных параметров</a></li>
 								<li><a href="#unauthorized-access">Несанкционированный доступ к данным</a></li>
+								<li><a href="#group-and-order">SQL-инъекция в операторах GROUP BY и ORDER BY</a></li>
 								<li><a href="#blind">Слепая SQL-инъекция</a></li>
 								<li><a href="#tricks">Особенности реализации SQL-инъекций</a></li>
 								<li><a href="#mitigation">Предотвращение SQL-инъекций</a></li>
@@ -68,6 +70,8 @@
 								<li><a href="cases/1/">Задание №1</a></li>
 								<li><a href="cases/2/">Задание №2</a></li>
 								<li><a href="cases/3/">Задание №3</a></li>
+								<li><a href="cases/4/">Задание №4</a></li>
+								<li><a href="cases/5/">Задание №5</a></li>
 							</ul>
 						</li>
 						<li><a href="https://github.com/toogle/sql-lab" target="_blank">Исходный код</a></li>
@@ -207,6 +211,47 @@
 							<code>SUBSTR(@@version, 1, 1) = 5</code> будет верным только если версия СУБД равна 5.
 						</p>
 
+						<p>
+							Нужно заметить, что при помощи слепой SQL-инъекции можно посимвольно подобрать практически любую
+							информацию из БД, используя функцию <tt>SUBSTR()</tt> или её аналоги в разных СУБД. Однако, этот
+							процесс достаточно трудоёмок и пользуются им крайне редко.
+						</p>
+
+						<h4 id="group-and-order">SQL-инъекция в операторах GROUP BY и ORDER BY</h4>
+						<p>
+							Если на сервере некорректно фильтруются параметры, подставляемые в качестве аргументов операторов GROUP
+							BY и ORDER BY, то возможности по внедрению SQL-кода ограничены, в частности, после этих операторов
+							невозможно использовать оператор UNION.
+						</p>
+
+						<p>
+							Тем не менее, существует возможность осуществить слепую SQL-инъекцию, используя операторы IF или CASE.
+							Оператор IF имеет следующий синтаксис:
+<pre><code><b><font color="#0000FF">IF</font></b><font color="#990000">(</font>clause<font color="#990000">,</font> expr1<font color="#990000">,</font> exp2<font color="#990000">)</font>
+</code></pre>
+
+							Если выражение <tt>clause</tt> имеет истинное значение, то <tt>IF</tt> возвращает <tt>expr1</tt>, если
+							ложное — <tt>expr2</tt>.
+						</p>
+
+						<p>
+							Рассмотрим следующий пример:
+<pre><code><font color="#009900">$sort</font> <font color="#990000">=</font> <font color="#009900">$_GET</font><font color="#990000">[</font><font color="#FF0000">'sort'</font><font color="#990000">];</font>
+<font color="#009900">$result</font> <font color="#990000">=</font> <b><font color="#000000">mysql_query</font></b><font color="#990000">(</font><font color="#FF0000">"SELECT author, title, date FROM articles ORDER BY $sort"</font><font color="#990000">);</font></code></pre>
+
+							Этот код получает в параметре <tt>sort</tt> порядок сортировки и подставляет его в запрос после оператора
+							<tt>ORDER BY</tt>. Если передать в качестве <tt>sort</tt> строку <code>IF(1=1, author, date)</code>, то
+							результаты будут отсортированы по автору, поскольку условие верно. Если заменить условие на заведомо неверное
+							(например, <code>IF(1=2, author, year)</code>), то результаты отсортируются по дате. Таким образом,
+							злоумышленник имеет возможность реализовать слепую SQL-инъекцию, наблюдая за порядком сортировки для разных
+							выражений.
+						</p>
+
+						<p>
+							Аналогичным образом можно поступить и в случае, когда можно влиять на параметры оператора <tt>GROUP BY</tt>,
+							наблюдая за группировкой результатов на странице.
+						</p>
+
 						<h4 id="tricks">Особенности реализации SQL-инъекций</h4>
 						<p>
 							Иногда злоумышленник может провести атаку, но не может видеть более одной колонки результатов. В таком случае
@@ -299,8 +344,8 @@
 			</div>
 		</div>
 
-		<script src="js/lib/jquery-1.11.1.min.js"></script>
-		<script src="js/lib/bootstrap.min.js"></script>
+		<script src="<?php echo MEDIA_URL; ?>/js/lib/jquery-1.11.1.min.js"></script>
+		<script src="<?php echo MEDIA_URL; ?>/js/lib/bootstrap.min.js"></script>
 		<script>
 			$(function() {
 				$('#demo1-slot').html($('#demo1-field').val());

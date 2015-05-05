@@ -1,3 +1,4 @@
+<?php require_once('../../config.php'); ?>
 <!DOCTYPE html>
 <html lang="ru">
 	<head>
@@ -7,7 +8,7 @@
 		<meta name="description" content="SQL Injection Lab">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="<?php echo MEDIA_URL; ?>/css/bootstrap.min.css" rel="stylesheet">
 
 		<style>
 			h4 {
@@ -20,7 +21,7 @@
 		</style>
 
 		<!--[if lt IE 9]>
-			<script src="../../js/lib/respond.min.js"></script>
+			<script src="<?php echo MEDIA_URL; ?>/js/lib/respond.min.js"></script>
 		<![endif]-->
 	</head>
 	<body>
@@ -37,13 +38,15 @@
 				<div class="col-md-3">
 					<ul class="nav nav-pills nav-stacked">
 						<li><a href="../../">Главная</a></li>
-						<li><a href="../../documentation.html">Методическое пособие</a></li>
+						<li><a href="../../documentation.php">Методическое пособие</a></li>
 						<li>
 							<a href="#">Рабочее задание</a>
 							<ul class="nav nav-pills nav-stacked nav-inner">
 								<li><a href="../1/">Задание №1</a></li>
 								<li><a href="../2/">Задание №2</a></li>
 								<li class="active"><a href=".">Задание №3</a></li>
+								<li><a href="../4/">Задание №4</a></li>
+								<li><a href="../5/">Задание №5</a></li>
 							</ul>
 						</li>
 						<li><a href="https://github.com/toogle/sql-lab" target="_blank">Исходный код</a></li>
@@ -55,10 +58,7 @@
 						<?php
 						// NOTE: The following code intended for demonstration purposes only.
 						//       It is EXTREMELY DANGER to use it for real applications.
-						$conn = @mysqli_connect('localhost', 'sql-lab', 'sql-lab', 'sql-lab');
-						mysqli_query($conn, "SET NAMES utf8");
-						mysqli_query($conn, "SET CHARACTER SET utf8");
-						mysqli_set_charset($conn, 'utf8');
+						$conn = @mysqli_connect(MYSQL_HOST, MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_DATABASE);
 
 						if (isset($_GET['id'])) {
 							$sql  = "SELECT rating, title, year, director, review, votes";
@@ -144,8 +144,8 @@
 			</div>
 		</div>
 
-		<script src="../../js/lib/jquery-1.11.1.min.js"></script>
-		<script src="../../js/lib/bootstrap.min.js"></script>
+		<script src="<?php echo MEDIA_URL; ?>/js/lib/jquery-1.11.1.min.js"></script>
+		<script src="<?php echo MEDIA_URL; ?>/js/lib/bootstrap.min.js"></script>
 		<script>
 			$('#hint').on('show.bs.collapse', function() {
 				$('a[data-target="#hint"]').html('скрыть');
